@@ -98,15 +98,20 @@ document.addEventListener('DOMContentLoaded', function(){
   net.addEventListener('hitstart',function(evt){
     var hit=evt.detail && evt.detail.el;
     if(!hit) return;
-
     hit.setAttribute('animation__fade','property: scale; to: 0.01 0.01 0.01; dur: 350; easing: easeInQuad');
-    setTimeout(()=>{
-      if(hit && hit.parentElement) hit.parentElement.removeChild(hit);
-      updateScore();
-    },380);
-
+    setTimeout(()=>{if(hit && hit.parentElement) hit.parentElement.removeChild(hit); updateScore();},380);
     soundEntity.components.sound.playSound();
   });
+
+  var player=document.querySelector('#player');
+  var startY = player.object3D.position.y;
+  var t = 0;
+  function floatPlayer(){
+    t += 0.01;
+    player.object3D.position.y = startY + Math.sin(t) * 0.2;
+    requestAnimationFrame(floatPlayer);
+  }
+  floatPlayer();
 });
 </script>
 </body>
