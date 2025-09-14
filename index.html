@@ -84,15 +84,16 @@ document.addEventListener('DOMContentLoaded', function(){
     function moveButterfly(){
       let np=randomPos(-50,50,1,6,-50,0);
       b.setAttribute('animation__move',{property:'position',to:`${np.x} ${np.y} ${np.z}`,dur:8000 + Math.random()*4000,easing:'easeInOutSine'});
-      b.setAttribute('animation__float',{property:'position',to:`${np.x} ${np.y + 0.3} ${np.z}`,dur:4000 + Math.random()*2000,direction:'alternate',loop:true,easing:'easeInOutSine'});
+      b.setAttribute('animation__float',{property:'position',to:`${np.x} ${np.y+0.3} ${np.z}`,dur:4000 + Math.random()*2000,direction:'alternate',loop:true,easing:'easeInOutSine'});
       b.setAttribute('animation__rotate',{property:'rotation',to:`0 ${Math.random()*360} 0`,dur:6000 + Math.random()*3000,loop:true,easing:'linear'});
     }
+
     moveButterfly();
     setInterval(()=>moveButterfly(),8000 + Math.random()*4000);
   }
 
   var net=document.querySelector('#net');
-  var soundEntity = document.querySelector('#catchSoundEntity');
+  var soundEntity=document.querySelector('#catchSoundEntity');
 
   net.addEventListener('hitstart',function(evt){
     var hit=evt.detail && evt.detail.el;
