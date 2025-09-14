@@ -102,30 +102,6 @@ document.addEventListener('DOMContentLoaded', function(){
     setTimeout(()=>{if(hit && hit.parentElement) hit.parentElement.removeChild(hit); updateScore();},380);
     soundEntity.components.sound.playSound();
   });
-
-  var player=document.querySelector('#player');
-  var startY = player.object3D.position.y;
-  var t = 0;
-  var floating = false;
-
-  function floatPlayer(){
-    if(floating){
-      t += 0.01;
-      player.object3D.position.y = startY + Math.sin(t) * 0.2;
-    }
-    requestAnimationFrame(floatPlayer);
-  }
-
-  document.addEventListener('keydown', function(e){
-    if(e.code === 'Space'){
-      floating = !floating;
-      if(!floating){
-        player.object3D.position.y = startY;
-      }
-    }
-  });
-
-  floatPlayer();
 });
 </script>
 </body>
