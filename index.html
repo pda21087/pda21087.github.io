@@ -26,7 +26,7 @@ body{margin:0;}
 <a-entity id="forest"></a-entity>
 <a-entity id="butterflies"></a-entity>
 
-<a-entity id="player" position="0 1.6 5" wasd-controls look-controls dynamic-body>
+<a-entity id="player" position="0 1.6 5" wasd-controls look-controls dynamic-body="shape: box; mass:1">
   <a-entity camera></a-entity>
   <a-entity id="net" geometry="primitive: cylinder; radius:0.05; height:1.2" material="color:#f0f0f0;opacity:0.9" position="0.6 -0.15 -0.8" rotation="-20 0 0" aabb-collider="objects: .butterfly-box">
     <a-ring position="0 0.55 0.05" rotation="-90 0 0" radius-inner="0.02" radius-outer="0.04"></a-ring>
@@ -51,7 +51,7 @@ let tree=document.createElement('a-entity');
 tree.setAttribute('gltf-model','url(linden_tree.glb)');
 tree.setAttribute('scale','2 5 2');
 tree.setAttribute('position',`${pos.x} 2 ${pos.z}`);
-tree.setAttribute('static-body','');
+tree.setAttribute('static-body','shape: box');
 forest.appendChild(tree);
 }
 
@@ -69,6 +69,7 @@ colliderBox.setAttribute('depth','0.1');
 colliderBox.setAttribute('height','0.2');
 colliderBox.setAttribute('width','0.2');
 colliderBox.setAttribute('visible','false');
+colliderBox.setAttribute('static-body',''); 
 butterfly.appendChild(colliderBox);
 
 let model=document.createElement('a-entity');
