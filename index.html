@@ -21,16 +21,17 @@ body{margin:0;}
 <a-entity id="catchSoundEntity" sound="src: #catchSound; autoplay: false"></a-entity>
 <a-sky color="#87CEEB"></a-sky>
 
-<a-plane position="0 0 0" rotation="-90 0 0" width="200" height="200" color="#3CB371" material="side: double"></a-plane>
+<!-- Πράσινο plane ως έδαφος -->
+<a-plane position="0 0 0" rotation="-90 0 0" width="200" height="200" color="#3CB371"></a-plane>
 
 <a-entity id="forest"></a-entity>
 <a-entity id="butterflies"></a-entity>
 
-<a-entity id="player" position="0 1.6 5" wasd-controls look-controls aabb-collider="objects: .tree, .butterfly">
-  <a-entity camera></a-entity>
-  <a-entity id="net" geometry="primitive: cylinder; radius:0.16; height:1.1" material="color:#f0f0f0;opacity:0.9" position="0 -0.15 -0.8" rotation="-20 0 0" aabb-collider="objects: .butterfly">
-    <a-ring position="0 0.55 0.05" rotation="-90 0 0" radius-inner="0.02" radius-outer="0.04"></a-ring>
-  </a-entity>
+<a-entity id="player" position="0 1.6 5" wasd-controls look-controls>
+<a-entity camera></a-entity>
+<a-entity id="net" geometry="primitive: cylinder; radius:0.16; height:1.1" material="color:#f0f0f0;opacity:0.9" position="0 -0.15 -0.8" rotation="-20 0 0" aabb-collider="objects:.butterfly">
+<a-ring position="0 0.55 0.05" rotation="-90 0 0" radius-inner="0.02" radius-outer="0.04"></a-ring>
+</a-entity>
 </a-entity>
 
 <a-entity light="type: ambient; intensity:0.6"></a-entity>
@@ -51,7 +52,6 @@ let tree=document.createElement('a-entity');
 tree.setAttribute('gltf-model','url(linden_tree.glb)');
 tree.setAttribute('scale','2 5 2');
 tree.setAttribute('position',`${pos.x} 2 ${pos.z}`);
-tree.setAttribute('class','tree');
 forest.appendChild(tree);
 }
 
@@ -88,5 +88,4 @@ soundEntity.components.sound.playSound();
 </script>
 </body>
 </html>
-
 
