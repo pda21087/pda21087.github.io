@@ -4,8 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VR Δάσος με Πεταλούδες</title>
 <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/aframe-aabb-collider-component@3.2.0/dist/aframe-aabb-collider-component.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/aframe-physics-system@4.0.1/dist/aframe-physics-system.min.js"></script>
 <style>
 body{margin:0;}
 #scoreboard{position:absolute;top:10px;left:10px;color:white;font-size:24px;font-family:sans-serif;z-index:100;}
@@ -13,7 +12,7 @@ body{margin:0;}
 </head>
 <body>
 <div id="scoreboard">Πεταλούδες: 0</div>
-<a-scene>
+<a-scene physics="gravity: -9.8">
 <a-assets>
 <audio id="catchSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5b2a31c3c2.mp3?filename=pop-94319.mp3"></audio>
 </a-assets>
@@ -21,14 +20,14 @@ body{margin:0;}
 <a-entity id="catchSoundEntity" sound="src: #catchSound; autoplay: false"></a-entity>
 <a-sky color="#87CEEB"></a-sky>
 
-<a-plane position="0 0 0" rotation="-90 0 0" width="200" height="200" color="#3CB371" material="side: double"></a-plane>
+<a-plane position="0 0 0" rotation="-90 0 0" width="200" height="200" color="#3CB371" static-body></a-plane>
 
 <a-entity id="forest"></a-entity>
 <a-entity id="butterflies"></a-entity>
 
-<a-entity id="player" position="0 1.6 5" wasd-controls look-controls aabb-collider="objects: .tree, .butterfly">
+<a-entity id="player" position="0 1.6 5" wasd-controls look-controls dynamic-body="shape: capsule; mass: 5">
   <a-entity camera></a-entity>
-  <a-entity id="net" geometry="primitive: cylinder; radius:0.16; height:1.1" material="color:#f0f0f0;opacity:0.9" position="0 -0.15 -0.8" rotation="-20 0 0" aabb-collider="objects: .butterfly">
+  <a-entity id="net" geometry="primitive: cylinder; radius:0.16; height:1.1" material="color:#f0f0f0;opacity:0.9" position="0 -0.15 -0.8">
     <a-ring position="0 0.55 0.05" rotation="-90 0 0" radius-inner="0.02" radius-outer="0.04"></a-ring>
   </a-entity>
 </a-entity>
@@ -51,7 +50,7 @@ let tree=document.createElement('a-entity');
 tree.setAttribute('gltf-model','url(linden_tree.glb)');
 tree.setAttribute('scale','2 5 2');
 tree.setAttribute('position',`${pos.x} 2 ${pos.z}`);
-tree.setAttribute('class','tree');
+tree.setAttribute('static-body','shape: box');
 forest.appendChild(tree);
 }
 
@@ -63,7 +62,7 @@ b.setAttribute('gltf-model','url(animated_butterfly.glb)');
 b.setAttribute('scale','0.5 0.5 0.5');
 b.setAttribute('position',`${pos.x} ${pos.y} ${pos.z}`);
 b.setAttribute('animation-mixer','');
-b.setAttribute('class','butterfly');
+b.setAttribute('static-body','shape: box');
 butterfliesContainer.appendChild(b);
 
 function moveButterfly(){
@@ -88,5 +87,6 @@ soundEntity.components.sound.playSound();
 </script>
 </body>
 </html>
+
 
 
