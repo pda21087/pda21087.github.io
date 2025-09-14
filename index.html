@@ -27,16 +27,14 @@
 
   <a-sky color="#87CEEB"></a-sky>
 
-  <!-- Plane ως έδαφος -->
   <a-plane position="0 0 0" rotation="-90 0 0" width="200" height="200" color="#228B22"></a-plane>
 
-  <!-- Νέο γρασίδι -->
   <a-entity gltf-model="url(realtime_grass.glb)" position="0 0 0" scale="10 5 10"></a-entity>
 
   <a-entity id="forest"></a-entity>
   <a-entity id="butterflies"></a-entity>
 
-  <a-entity id="player" position="0 10 5" wasd-controls look-controls>
+  <a-entity id="player" position="0 1.6 5" wasd-controls look-controls>
     <a-entity camera></a-entity>
     <a-entity id="net"
               geometry="primitive: cylinder; radius:0.16; height:1.1"
@@ -116,3 +114,4 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 </body>
 </html>
+
