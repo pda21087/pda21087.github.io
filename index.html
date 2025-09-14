@@ -53,8 +53,8 @@ forest.appendChild(tree);
 }
 
 var butterfliesContainer=document.querySelector('#butterflies');
-for(let i=0;i<15;i++){
-let pos=randomPos(-50,50,1,3,-50,0);
+for(let i=0;i<12;i++){
+let pos=randomPos(-50,50,0.8,2,-50,0);
 let butterfly=document.createElement('a-entity');
 butterfly.setAttribute('position',`${pos.x} ${pos.y} ${pos.z}`);
 butterfly.setAttribute('class','butterfly');
@@ -62,24 +62,29 @@ butterfly.setAttribute('class','butterfly');
 let colliderBox=document.createElement('a-box');
 colliderBox.setAttribute('position','0 0 0');
 colliderBox.setAttribute('depth','0.1');
-colliderBox.setAttribute('height','0.3');
-colliderBox.setAttribute('width','0.3');
+colliderBox.setAttribute('height','0.2');
+colliderBox.setAttribute('width','0.2');
 colliderBox.setAttribute('visible','false');
 butterfly.appendChild(colliderBox);
 
 let model=document.createElement('a-entity');
 model.setAttribute('gltf-model','url(animated_butterfly.glb)');
-model.setAttribute('scale','0.5 0.5 0.5');
+model.setAttribute('scale','0.4 0.4 0.4');
 model.setAttribute('animation-mixer','');
 butterfly.appendChild(model);
 
 butterfliesContainer.appendChild(butterfly);
 
 function moveButterfly(){
-let np=randomPos(-50,50,1,3,-50,0);
+let currentPos = butterfly.object3D.position;
+let np = randomPos(-50,50,0.8,2,-50,0);
+let dx = np.x - currentPos.x;
+let dz = np.z - currentPos.z;
+let angle = Math.atan2(dx, dz) * (180/Math.PI);
+
 butterfly.setAttribute('animation__move',{property:'position',to:`${np.x} ${np.y} ${np.z}`,dur:20000+Math.random()*10000,easing:'easeInOutSine'});
+butterfly.setAttribute('animation__rotate',{property:'rotation',to:`0 ${angle} 0`,dur:2000,easing:'easeInOutSine'});
 butterfly.setAttribute('animation__float',{property:'position',to:`${np.x} ${np.y+0.2} ${np.z}`,dur:10000+Math.random()*5000,direction:'alternate',loop:true,easing:'easeInOutSine'});
-butterfly.setAttribute('animation__rotate',{property:'rotation',to:`0 ${Math.random()*360} 0`,dur:16000+Math.random()*6000,loop:true,easing:'linear'});
 }
 moveButterfly();
 setInterval(()=>moveButterfly(),20000+Math.random()*10000);
