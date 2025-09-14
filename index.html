@@ -7,11 +7,15 @@
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-aabb-collider-component@3.2.0/dist/aframe-aabb-collider-component.min.js"></script>
   <style>
-    body{margin:0;}
-    #scoreboard{
-      position:absolute; top:10px; left:10px;
-      color:white; font-size:24px; font-family:sans-serif;
-      z-index:100;
+    body {margin:0;}
+    #scoreboard {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 24px;
+      font-family: sans-serif;
+      z-index: 100;
     }
   </style>
 </head>
@@ -46,19 +50,18 @@
 </a-scene>
 
 <script>
-  var score=0;
-  var scoreboard=document.getElementById('scoreboard');
-
+  var score = 0;
+  var scoreboard = document.getElementById('scoreboard');
   function updateScore(){
     score++;
-    scoreboard.innerText='Πεταλούδες: '+score;
+    scoreboard.innerText = 'Πεταλούδες: ' + score;
   }
 
   function randomPos(minX,maxX,minY,maxY,minZ,maxZ){
-    return {x:Math.random()*(maxX-minX)+minX, y:Math.random()*(maxY-minY)+minY, z:Math.random()*(maxZ-minZ)+minZ};
+    return {x: Math.random()*(maxX-minX)+minX, y: Math.random()*(maxY-minY)+minY, z: Math.random()*(maxZ-minZ)+minZ};
   }
 
-  var forest=document.querySelector('#forest');
+  var forest = document.querySelector('#forest');
   for(let i=0;i<50;i++){
     let pos=randomPos(-50,50,0,0,-50,0);
     let tree=document.createElement('a-entity');
@@ -68,9 +71,9 @@
     forest.appendChild(tree);
   }
 
-  var butterfliesContainer=document.querySelector('#butterflies');
+  var butterfliesContainer = document.querySelector('#butterflies');
   for(let i=0;i<30;i++){
-    let pos=randomPos(-20,20,1,4,-25,0);
+    let pos=randomPos(-50,50,1,6,-50,0);
     let b=document.createElement('a-entity');
     b.setAttribute('gltf-model','url(animated_butterfly.glb)');
     b.setAttribute('scale','0.5 0.5 0.5');
@@ -80,10 +83,10 @@
     butterfliesContainer.appendChild(b);
 
     function moveButterfly(){
-      let np=randomPos(-20,20,1,4,-25,0);
+      let np=randomPos(-50,50,1,6,-50,0);
       b.setAttribute('animation__move',{property:'position',to:`${np.x} ${np.y} ${np.z}`,dur:4000+Math.random()*2000,easing:'easeInOutSine'});
       b.setAttribute('animation__float',{property:'position',to:`${np.x} ${np.y+0.3} ${np.z}`,dur:2000+Math.random()*1000,direction:'alternate',loop:true,easing:'easeInOutSine'});
-      b.setAttribute('animation__rotate',{property:'rotation',to:`0 ${Math.random()*360} 0`,dur:3000 + Math.random()*2000,loop:true,easing:'linear'});
+      b.setAttribute('animation__rotate',{property:'rotation',to:`0 ${Math.random()*360} 0`,dur:3000+Math.random()*2000,loop:true,easing:'linear'});
     }
     moveButterfly();
     setInterval(moveButterfly,5000+Math.random()*2000);
@@ -93,12 +96,14 @@
   net.addEventListener('hitstart',function(evt){
     var hit=evt.detail && evt.detail.el;
     if(!hit) return;
-    var audio=new Audio(document.querySelector('#catchSound').src);
-    audio.volume=0.9;
-    audio.play().catch(()=>{});
     hit.setAttribute('animation__fade','property: scale; to: 0.01 0.01 0.01; dur: 350; easing: easeInQuad');
-    setTimeout(()=>{if(hit && hit.parentElement) hit.parentElement.removeChild(hit)},380);
-    updateScore();
+    setTimeout(()=>{
+      if(hit && hit.parentElement) hit.parentElement.removeChild(hit);
+      updateScore();
+    },380);
+
+    var audio = document.querySelector('#catchSound');
+    audio.components.sound.playSound();
   });
 </script>
 </body>
