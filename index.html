@@ -20,7 +20,6 @@ body{margin:0;}
 <a-entity id="catchSoundEntity" sound="src: #catchSound; autoplay: false"></a-entity>
 <a-sky color="#87CEEB"></a-sky>
 
-<!-- Γρασίδι GLB χωρίς plane -->
 <a-entity gltf-model="url(simple_grass_ground_free_low_mode.glb)" position="0 0.5 0" scale="15 3 15"></a-entity>
 
 <a-entity id="forest"></a-entity>
@@ -28,7 +27,7 @@ body{margin:0;}
 
 <a-entity id="player" position="0 1.6 5" wasd-controls look-controls>
 <a-entity camera></a-entity>
-<a-entity id="net" geometry="primitive: cylinder; radius:0.16; height:1.1" material="color: #f0f0f0; opacity:0.9" position="0 -0.15 -0.8" rotation="-20 0 0" aabb-collider="objects: .butterfly">
+<a-entity id="net" geometry="primitive: cylinder; radius:0.16; height:1.1" material="color:#f0f0f0;opacity:0.9" position="0 -0.15 -0.8" rotation="-20 0 0" aabb-collider="objects:.butterfly">
 <a-ring position="0 0.55 0.05" rotation="-90 0 0" radius-inner="0.02" radius-outer="0.04"></a-ring>
 </a-entity>
 </a-entity>
@@ -42,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function(){
 var score=0;
 var scoreboard=document.getElementById('scoreboard');
 function updateScore(){ score++; scoreboard.innerText='Πεταλούδες: '+score; }
-function randomPos(minX,maxX,minY,maxY,minZ,maxZ){ return {x: Math.random()*(maxX-minX)+minX, y: Math.random()*(maxY-minY)+minY, z: Math.random()*(maxZ-minZ)+minZ}; }
+function randomPos(minX,maxX,minY,maxY,minZ,maxZ){ return {x:Math.random()*(maxX-minX)+minX,y:Math.random()*(maxY-minY)+minY,z:Math.random()*(maxZ-minZ)+minZ}; }
 
 var forest=document.querySelector('#forest');
 for(let i=0;i<50;i++){
@@ -79,7 +78,7 @@ var net=document.querySelector('#net');
 var soundEntity=document.querySelector('#catchSoundEntity');
 net.addEventListener('hitstart',function(evt){
 var hit=evt.detail && evt.detail.el; if(!hit) return;
-hit.setAttribute('animation__fade','property: scale; to: 0.01 0.01 0.01; dur: 350; easing: easeInQuad');
+hit.setAttribute('animation__fade','property: scale; to:0.01 0.01 0.01; dur:350; easing:easeInQuad');
 setTimeout(()=>{ if(hit && hit.parentElement) hit.parentElement.removeChild(hit); updateScore(); },380);
 soundEntity.components.sound.playSound();
 });
@@ -87,3 +86,4 @@ soundEntity.components.sound.playSound();
 </script>
 </body>
 </html>
+
