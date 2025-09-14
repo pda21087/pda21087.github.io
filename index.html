@@ -26,7 +26,7 @@ body{margin:0;}
 
 <a-entity id="player" position="0 1.6 5" wasd-controls look-controls>
   <a-entity camera></a-entity>
-  <a-entity id="net" geometry="primitive: cylinder; radius:0.2; height:1.2" material="color:#f0f0f0;opacity:0.9" position="0.2 -0.15 -0.8" rotation="-20 0 0" aabb-collider="objects:.butterfly">
+  <a-entity id="net" geometry="primitive: cylinder; radius:0.08; height:1.2" material="color:#f0f0f0;opacity:0.9" position="0.5 -0.15 -0.8" rotation="-20 0 0" aabb-collider="objects: .butterfly-box">
     <a-ring position="0 0.55 0.05" rotation="-90 0 0" radius-inner="0.02" radius-outer="0.04"></a-ring>
   </a-entity>
 </a-entity>
@@ -54,12 +54,13 @@ forest.appendChild(tree);
 
 var butterfliesContainer=document.querySelector('#butterflies');
 for(let i=0;i<12;i++){
-let pos=randomPos(-50,50,0.8,2,-50,0);
+let pos=randomPos(-50,50,0.5,1.5,-50,0);
 let butterfly=document.createElement('a-entity');
 butterfly.setAttribute('position',`${pos.x} ${pos.y} ${pos.z}`);
 butterfly.setAttribute('class','butterfly');
 
 let colliderBox=document.createElement('a-box');
+colliderBox.setAttribute('class','butterfly-box');
 colliderBox.setAttribute('position','0 0 0');
 colliderBox.setAttribute('depth','0.1');
 colliderBox.setAttribute('height','0.2');
@@ -69,7 +70,7 @@ butterfly.appendChild(colliderBox);
 
 let model=document.createElement('a-entity');
 model.setAttribute('gltf-model','url(animated_butterfly.glb)');
-model.setAttribute('scale','0.4 0.4 0.4');
+model.setAttribute('scale','0.35 0.35 0.35');
 model.setAttribute('animation-mixer','');
 butterfly.appendChild(model);
 
@@ -77,27 +78,47 @@ butterfliesContainer.appendChild(butterfly);
 
 function moveButterfly(){
 let currentPos = butterfly.object3D.position;
-let np = randomPos(-50,50,0.8,2,-50,0);
+let np = randomPos(-50,50,0.5,1.5,-50,0);
 let dx = np.x - currentPos.x;
 let dz = np.z - currentPos.z;
 let angle = Math.atan2(dx, dz) * (180/Math.PI);
 
-butterfly.setAttribute('animation__move',{property:'position',to:`${np.x} ${np.y} ${np.z}`,dur:20000+Math.random()*10000,easing:'easeInOutSine'});
-butterfly.setAttribute('animation__rotate',{property:'rotation',to:`0 ${angle} 0`,dur:2000,easing:'easeInOutSine'});
-butterfly.setAttribute('animation__float',{property:'position',to:`${np.x} ${np.y+0.2} ${np.z}`,dur:10000+Math.random()*5000,direction:'alternate',loop:true,easing:'easeInOutSine'});
+butterfly.setAttribute('animation__move',{
+  property:'position',
+  to:`${np.x} ${np.y} ${np.z}`,
+  dur:25000+Math.random()*10000,
+  easing:'easeInOutSine'
+});
+
+butterfly.setAttribute('animation__rotate',{
+  property:'rotation',
+  to:`0 ${angle} 0`,
+  dur:2000,
+  easing:'easeInOutSine'
+});
+
+butterfly.setAttribute('animation__float',{
+  property:'position',
+  to:`${np.x} ${np.y+0.15} ${np.z}`,
+  dur:12000+Math.random()*5000,
+  direction:'alternate',
+  loop:true,
+  easing:'easeInOutSine'
+});
 }
 moveButterfly();
-setInterval(()=>moveButterfly(),20000+Math.random()*10000);
+setInterval(()=>moveButterfly(),25000+Math.random()*10000);
 }
 
 var net=document.querySelector('#net');
 var soundEntity=document.querySelector('#catchSoundEntity');
 net.addEventListener('hitstart', function(evt){
 var hit = evt.detail && evt.detail.el;
-if(!hit || !hit.classList.contains('butterfly')) return;
-hit.setAttribute('animation__fade','property: scale; to:0.01 0.01 0.01; dur:350; easing:easeInQuad');
+if(!hit || !hit.classList.contains('butterfly-box')) return;
+let butterfly=hit.parentElement;
+butterfly.setAttribute('animation__fade','property: scale; to:0.01 0.01 0.01; dur:350; easing:easeInQuad');
 setTimeout(()=>{
-if(hit && hit.parentElement) hit.parentElement.removeChild(hit);
+if(butterfly && butterfly.parentElement) butterfly.parentElement.removeChild(butterfly);
 updateScore();
 },380);
 soundEntity.components.sound.playSound();
@@ -106,3 +127,4 @@ soundEntity.components.sound.playSound();
 </script>
 </body>
 </html>
+
