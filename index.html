@@ -1,115 +1,84 @@
-<html lang="el">
+<html>
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VR Δάσος με Πεταλούδες</title>
-<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/aframe-physics-system@4.0.1/dist/aframe-physics-system.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/aframe-aabb-collider-component@3.2.0/dist/aframe-aabb-collider-component.min.js"></script>
-<style>
-body{margin:0;}
-#scoreboard{position:absolute;top:10px;left:10px;color:white;font-size:24px;font-family:sans-serif;z-index:100;}
-</style>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
+    <script>
+        var count = 0, coords;
+        AFRAME.registerComponent('flying', {
+            init: function () {
+                coords = document.getElementById('cam');
+                document.querySelector('a-scene').addEventListener('enter-vr', function () { coords = document.getElementById('rig'); });
+                document.querySelector('a-scene').addEventListener('exit-vr', function () { coords = document.getElementById('cam'); });
+            },
+            tick: function () {
+                var pos1 = coords.getAttribute('position');
+                var pos2 = this.el.getAttribute('position');
+                if (Math.abs(pos1.x - pos2.x) < 1 && Math.abs(pos1.z - pos2.z) < 1) {
+                    this.el.remove();
+                    document.getElementById('counter').setAttribute('value', 'Score: ' + ++count);
+                }
+                if (Math.random() < 0.95) return;
+                var x = Math.random() * 600 - 300;
+                var z = Math.random() * 600 - 300;
+                this.el.setAttribute('animation', 'property: position; to: ' + x + ' 2.5 ' + z + '; dur: 10000');
+            }
+        });
+    </script>
+    <script src="https://gftruj.github.io/webzamples/aframe/controls/oculus-thumbstick-controls.js"></script>
 </head>
+
 <body>
-<div id="scoreboard">Πεταλούδες: 0</div>
-<a-scene physics="gravity: 0" embedded>
-<a-assets>
-<audio id="catchSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5b2a31c3c2.mp3?filename=pop-94319.mp3"></audio>
-</a-assets>
-
-<a-entity id="catchSoundEntity" sound="src: #catchSound; autoplay: false"></a-entity>
-<a-sky color="#87CEEB"></a-sky>
-<a-plane position="0 0 0" rotation="-90 0 0" width="200" height="200" color="#3CB371" static-body></a-plane>
-
-<a-entity id="forest"></a-entity>
-<a-entity id="butterflies"></a-entity>
-
-<a-entity id="player" position="0 1.6 5" wasd-controls look-controls dynamic-body="shape: box; mass:1">
-  <a-entity camera></a-entity>
-  <a-entity id="net" geometry="primitive: cylinder; radius:0.05; height:1.2" material="color:#f0f0f0;opacity:0.9" position="0.6 -0.15 -0.8" rotation="-20 0 0" aabb-collider="objects: .butterfly-box">
-    <a-ring position="0 0.55 0.05" rotation="-90 0 0" radius-inner="0.02" radius-outer="0.04"></a-ring>
-  </a-entity>
-</a-entity>
-
-<a-entity light="type: ambient; intensity:0.6"></a-entity>
-<a-entity light="type: directional; intensity:0.8" position="0 10 5"></a-entity>
-</a-scene>
-
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-var score=0;
-var scoreboard=document.getElementById('scoreboard');
-function updateScore(){ score++; scoreboard.innerText='Πεταλούδες: '+score; }
-function randomPos(minX,maxX,minY,maxY,minZ,maxZ){ return {x:Math.random()*(maxX-minX)+minX,y:Math.random()*(maxY-minY)+minY,z:Math.random()*(maxZ-minZ)+minZ}; }
-
-var forest=document.querySelector('#forest');
-for(let i=0;i<50;i++){
-let pos=randomPos(-50,50,0,0,-50,0);
-let tree=document.createElement('a-entity');
-tree.setAttribute('gltf-model','url(linden_tree.glb)');
-tree.setAttribute('scale','2 5 2');
-tree.setAttribute('position',`${pos.x} 2 ${pos.z}`);
-tree.setAttribute('static-body','shape: box');
-forest.appendChild(tree);
-}
-
-var butterfliesContainer=document.querySelector('#butterflies');
-for(let i=0;i<12;i++){
-let pos=randomPos(-50,50,0.5,1.5,-50,0);
-let butterfly=document.createElement('a-entity');
-butterfly.setAttribute('position',`${pos.x} ${pos.y} ${pos.z}`);
-butterfly.setAttribute('class','butterfly');
-
-let colliderBox=document.createElement('a-box');
-colliderBox.setAttribute('class','butterfly-box');
-colliderBox.setAttribute('position','0 0 0');
-colliderBox.setAttribute('depth','0.1');
-colliderBox.setAttribute('height','0.2');
-colliderBox.setAttribute('width','0.2');
-colliderBox.setAttribute('visible','false');
-colliderBox.setAttribute('static-body',''); 
-butterfly.appendChild(colliderBox);
-
-let model=document.createElement('a-entity');
-model.setAttribute('gltf-model','url(animated_butterfly.glb)');
-model.setAttribute('scale','0.35 0.35 0.35');
-model.setAttribute('animation-mixer','');
-butterfly.appendChild(model);
-
-butterfliesContainer.appendChild(butterfly);
-
-function moveButterfly(){
-let currentPos = butterfly.object3D.position;
-let np = randomPos(-50,50,0.5,1.5,-50,0);
-let dx = np.x - currentPos.x;
-let dz = np.z - currentPos.z;
-let angle = Math.atan2(dx, dz) * (180/Math.PI);
-
-butterfly.setAttribute('animation__move',{property:'position',to:`${np.x} ${np.y} ${np.z}`,dur:30000+Math.random()*10000,easing:'easeInOutSine'});
-butterfly.setAttribute('animation__rotate',{property:'rotation',to:`0 ${angle} 0`,dur:2000,easing:'easeInOutSine'});
-butterfly.setAttribute('animation__float',{property:'position',to:`${np.x} ${np.y+0.15} ${np.z}`,dur:15000+Math.random()*5000,direction:'alternate',loop:true,easing:'easeInOutSine'});
-}
-moveButterfly();
-setInterval(()=>moveButterfly(),30000+Math.random()*10000);
-}
-
-var net=document.querySelector('#net');
-var soundEntity=document.querySelector('#catchSoundEntity');
-net.addEventListener('hitstart', function(evt){
-var hit = evt.detail && evt.detail.el;
-if(!hit || !hit.classList.contains('butterfly-box')) return;
-let butterfly=hit.parentElement;
-butterfly.setAttribute('animation__fade','property: scale; to:0.01 0.01 0.01; dur:350; easing:easeInQuad');
-setTimeout(()=>{
-if(butterfly && butterfly.parentElement) butterfly.parentElement.removeChild(butterfly);
-updateScore();
-},380);
-soundEntity.components.sound.playSound();
-});
-});
-</script>
+    <a-scene id="s1" background="color:#0d0928" fog="far:300" shadow="type: pcfsoft">
+        <a-entity id="rig">
+            <a-camera id="cam" position="0 3 0">
+                <a-text id="counter" value="Score: 0" geometry="primitive: plane; width: 0; height: 1"
+                    position="-0.5 0.5 -1" material="opacity: 0"></a-text>
+            </a-camera>
+            <a-entity oculus-touch-controls="hand: right" oculus-thumbstick-controls></a-entity>
+        </a-entity>
+        <a-sphere radius="500" position="0 5000 0" material="fog: false"></a-sphere>
+        <a-entity
+            light="type: directional; intensity: 0.5; castShadow: true; shadowCameraBottom: -500; shadowCameraTop: 500; shadowCameraLeft: -500; shadowCameraRight: 500"
+            position="0 250 0"></a-entity>
+        <a-light type="ambient" intensity="0.25"></a-light>
+        <a-assets>
+          
+            <a-asset-item id="tree" src="linden_tree.glb"></a-asset-item>
+            <a-asset-item id="butterfly" src="animated_butterfly.glb"></a-asset-item>
+        </a-assets>
+        <a-plane color="#2a1c0e" height="1000" width="1000" rotation="-90 0 0" metalness="0" shadow></a-plane>
+    </a-scene>
+    <script>
+        var scene1 = document.getElementById('s1');
+        for (var i = 0; i < 500; i++) {
+            var tree = document.createElement('a-entity');
+            var x = Math.random() * 800 - 400;
+            var z = Math.random() * 800 - 400;
+            var s = Math.random() * 15 + 5;
+            var r = Math.random() * 180 - 90;
+            tree.setAttribute('gltf-model', '#tree');
+            tree.setAttribute('position', x + ' 0 ' + z);
+            tree.setAttribute('scale', s + ' ' + s + ' ' + s);
+            tree.setAttribute('rotation', '0 ' + r + ' 0');
+            tree.setAttribute('shadow', 'receive: false');
+            scene1.appendChild(tree);
+        }
+        for (var i = 0; i < 100; i++) {
+            var butterfly = document.createElement('a-entity');
+            var x = Math.random() * 600 - 300;
+            var z = Math.random() * 600 - 300;
+            var r = Math.random() * 180 - 90;
+            butterfly.setAttribute('gltf-model', '#butterfly');
+            butterfly.setAttribute('position', x + ' 2.5 ' + z);
+            butterfly.setAttribute('scale', '0.5 0.5 0.5');
+            butterfly.setAttribute('rotation', '0 ' + r + ' 0');
+            butterfly.setAttribute('animation-mixer', '');
+            butterfly.setAttribute('flying', '');
+            scene1.appendChild(butterfly);
+        }
+    </script>
 </body>
+
 </html>
 
