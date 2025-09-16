@@ -52,17 +52,19 @@
         var scene1 = document.getElementById('s1');
         for (var i = 0; i < 500; i++) {
             var tree = document.createElement('a-entity');
-            var x = Math.random() * 800 - 400;
-            var z = Math.random() * 800 - 400;
-            var s = Math.random() * 1.2 + 0.8; 
+            // λίγο πιο κοντά μεταξύ τους για να φαίνεται πιο πυκνό δάσος
+            var x = Math.random() * 700 - 350;
+            var z = Math.random() * 700 - 350;
+            var s = Math.random() * 1.2 + 0.8; // scale 0.8 έως 2.0
             var r = Math.random() * 180 - 90;
-            tree.setAttribute('gltf-model', '#tree'); // low_poly_tree.glb
+            tree.setAttribute('gltf-model', '#tree');
             tree.setAttribute('position', x + ' 0 ' + z);
             tree.setAttribute('scale', s + ' ' + s + ' ' + s);
             tree.setAttribute('rotation', '0 ' + r + ' 0');
             tree.setAttribute('shadow', 'receive: false');
             scene1.appendChild(tree);
         }
+
         for (var i = 0; i < 100; i++) {
             var butterfly = document.createElement('a-entity');
             var x = Math.random() * 600 - 300;
