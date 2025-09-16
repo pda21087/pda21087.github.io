@@ -52,14 +52,20 @@
         var scene1 = document.getElementById('s1');
         for (var i = 0; i < 500; i++) {
             var tree = document.createElement('a-entity');
-            // λίγο πιο κοντά μεταξύ τους για να φαίνεται πιο πυκνό δάσος
-            var x = Math.random() * 700 - 350;
-            var z = Math.random() * 700 - 350;
-            var s = Math.random() * 1.2 + 0.8; // scale 0.8 έως 2.0
+
+            // πιο κοντά μεταξύ τους: -300 έως 300
+            var x = Math.random() * 600 - 300;
+            var z = Math.random() * 600 - 300;
+
+            // τυχαίο μέγεθος για φυσικότητα
+            var scaleX = Math.random() * 0.6 + 0.8; // 0.8 έως 1.4
+            var scaleY = Math.random() * 1.2 + 0.8; // 0.8 έως 2.0 για ύψος
+            var scaleZ = Math.random() * 0.6 + 0.8; // 0.8 έως 1.4
+
             var r = Math.random() * 180 - 90;
             tree.setAttribute('gltf-model', '#tree');
             tree.setAttribute('position', x + ' 0 ' + z);
-            tree.setAttribute('scale', s + ' ' + s + ' ' + s);
+            tree.setAttribute('scale', scaleX + ' ' + scaleY + ' ' + scaleZ);
             tree.setAttribute('rotation', '0 ' + r + ' 0');
             tree.setAttribute('shadow', 'receive: false');
             scene1.appendChild(tree);
