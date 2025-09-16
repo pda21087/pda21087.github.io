@@ -43,7 +43,6 @@
             position="0 250 0"></a-entity>
         <a-light type="ambient" intensity="0.25"></a-light>
         <a-assets>
-            
             <a-asset-item id="tree" src="low_poly_tree.glb"></a-asset-item>
             <a-asset-item id="butterfly" src="animated_butterfly.glb"></a-asset-item>
         </a-assets>
@@ -55,7 +54,7 @@
             var tree = document.createElement('a-entity');
             var x = Math.random() * 800 - 400;
             var z = Math.random() * 800 - 400;
-            var s = Math.random() * 15 + 5; // διατηρούμε ίδιο range scale όπως αρχικά
+            var s = (Math.random() * 15 + 5) * 3; // τριπλάσιο μέγεθος
             var r = Math.random() * 180 - 90;
             tree.setAttribute('gltf-model', '#tree'); // low_poly_tree.glb
             tree.setAttribute('position', x + ' 0 ' + z);
