@@ -8,12 +8,8 @@
         AFRAME.registerComponent('flying', {
             init: function () {
                 coords = document.getElementById('cam');
-                document.querySelector('a-scene').addEventListener('enter-vr', function () {
-                    coords = document.getElementById('rig');
-                });
-                document.querySelector('a-scene').addEventListener('exit-vr', function () {
-                    coords = document.getElementById('cam');
-                });
+                document.querySelector('a-scene').addEventListener('enter-vr', function () { coords = document.getElementById('rig'); });
+                document.querySelector('a-scene').addEventListener('exit-vr', function () { coords = document.getElementById('cam'); });
             },
             tick: function () {
                 var pos1 = coords.getAttribute('position');
@@ -21,12 +17,6 @@
                 if (Math.abs(pos1.x - pos2.x) < 1 && Math.abs(pos1.z - pos2.z) < 1) {
                     this.el.remove();
                     document.getElementById('counter').setAttribute('value', 'Score: ' + ++count);
-
-                    // Παίζει ο ήχος πόντου
-                    var sound = document.getElementById('catch-sound');
-                    if (sound && sound.components.sound) {
-                        sound.components.sound.playSound();
-                    }
                 }
                 if (Math.random() < 0.95) return;
                 var x = Math.random() * 600 - 300;
@@ -40,19 +30,23 @@
 
 <body>
     <a-scene id="s1" background="color:#0d0928" fog="far:300" shadow="type: pcfsoft">
-
         <a-entity id="rig">
             <a-camera id="cam" position="0 3 0">
-                <a-text id="counter" value="Score: 0"
-                        geometry="primitive: plane; width: 0; height: 1"
-                        position="-0.5 0.5 -1"
-                        material="opacity: 0"></a-text>
+                <a-text id="counter" value="Score: 0" geometry="primitive: plane; width: 0; height: 1"
+                    position="-0.5 0.5 -1" material="opacity: 0"></a-text>
+
+                <!-- Απόχη: κοντά στην κάμερα, διχτυ προς τα έξω -->
+                <a-entity gltf-model="#net"
+                          position="0.25 -0.25 -0.5"
+                          rotation="0 -25 50"
+                          scale="0.002 0.002 0.002">
+                </a-entity>
+
             </a-camera>
             <a-entity oculus-touch-controls="hand: right" oculus-thumbstick-controls></a-entity>
         </a-entity>
 
         <a-sphere radius="500" position="0 5000 0" material="fog: false"></a-sphere>
-
         <a-entity light="type: directional; intensity: 0.5; castShadow: true;
                          shadowCameraBottom: -500; shadowCameraTop: 500;
                          shadowCameraLeft: -500; shadowCameraRight: 500"
@@ -63,44 +57,19 @@
             <a-asset-item id="tree" src="low_poly_tree.glb"></a-asset-item>
             <a-asset-item id="butterfly" src="animated_butterfly.glb"></a-asset-item>
             <a-asset-item id="net" src="jellyfish_net_spongebob.glb"></a-asset-item>
-            <audio id="catch" src="ding-402325.mp3"></audio>
         </a-assets>
 
-        <!-- Entity για τον ήχο -->
-        <a-entity id="catch-sound"
-                  sound="src: #catch; autoplay: false; positional: false; volume: 1">
-        </a-entity>
-
-        <!-- Έδαφος -->
         <a-plane color="#2a1c0e" height="1000" width="1000"
                  rotation="-90 0 0" metalness="0" shadow></a-plane>
-
-        <!-- Απόχη δεξιά -->
-        <a-entity id="net-entity"
-                  gltf-model="#net"
-                  position="0.6 2 -1"
-                  scale="0.07 0.07 0.07"
-                  rotation="0 200 0"></a-entity>
     </a-scene>
 
     <script>
-        // Ξεκλείδωμα ήχου με το πρώτο click/tap
-        window.addEventListener('click', function () {
-            var sound = document.getElementById('catch-sound');
-            if (sound && sound.components.sound) {
-                sound.components.sound.playSound();
-                sound.components.sound.stopSound();
-            }
-        }, { once: true });
-
         var scene1 = document.getElementById('s1');
-
-        // Δέντρα
-        for (var i = 0; i < 300; i++) {
+        for (var i = 0; i < 400; i++) {
             var tree = document.createElement('a-entity');
             var x = Math.random() * 700 - 350;
             var z = Math.random() * 700 - 350;
-            var s = (Math.random() * 0.8 + 0.7); // scale 0.7–1.5
+            var s = Math.random() * 1 + 1; // scale 1 έως 2
             var r = Math.random() * 180 - 90;
             tree.setAttribute('gltf-model', '#tree');
             tree.setAttribute('position', x + ' 0 ' + z);
@@ -110,7 +79,6 @@
             scene1.appendChild(tree);
         }
 
-        // Πεταλούδες
         for (var i = 0; i < 100; i++) {
             var butterfly = document.createElement('a-entity');
             var x = Math.random() * 600 - 300;
@@ -128,4 +96,3 @@
 </body>
 
 </html>
-
