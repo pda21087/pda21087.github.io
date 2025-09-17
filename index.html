@@ -37,11 +37,11 @@
                         position="-0.5 0.5 -1"
                         material="opacity: 0"></a-text>
 
-                
+           
                 <a-entity gltf-model="#net"
                           position="0.4 -0.3 -0.8"
-                          rotation="0 -20 20"
-                          scale="0.02 0.02 0.02">
+                          rotation="0 -20 40"
+                          scale="0.01 0.01 0.01">
                 </a-entity>
             </a-camera>
 
@@ -68,7 +68,7 @@
     <script>
         var scene1 = document.getElementById('s1');
 
-
+    
         for (var i = 0; i < 500; i++) {
             var tree = document.createElement('a-entity');
             var x = Math.random() * 700 - 350;
@@ -101,3 +101,4 @@
 </body>
 
 </html>
+
