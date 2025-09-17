@@ -8,8 +8,12 @@
         AFRAME.registerComponent('flying', {
             init: function () {
                 coords = document.getElementById('cam');
-                document.querySelector('a-scene').addEventListener('enter-vr', function () { coords = document.getElementById('rig'); });
-                document.querySelector('a-scene').addEventListener('exit-vr', function () { coords = document.getElementById('cam'); });
+                document.querySelector('a-scene').addEventListener('enter-vr', function () {
+                    coords = document.getElementById('rig');
+                });
+                document.querySelector('a-scene').addEventListener('exit-vr', function () {
+                    coords = document.getElementById('cam');
+                });
             },
             tick: function () {
                 var pos1 = coords.getAttribute('position');
@@ -17,6 +21,12 @@
                 if (Math.abs(pos1.x - pos2.x) < 1 && Math.abs(pos1.z - pos2.z) < 1) {
                     this.el.remove();
                     document.getElementById('counter').setAttribute('value', 'Score: ' + ++count);
+
+                    // Παίζει ήχο όταν πιάνεται η πεταλούδα
+                    var sound = document.getElementById('catch-sound');
+                    if (sound && sound.components.sound) {
+                        sound.components.sound.playSound();
+                    }
                 }
                 if (Math.random() < 0.95) return;
                 var x = Math.random() * 600 - 300;
@@ -57,7 +67,14 @@
             <a-asset-item id="tree" src="low_poly_tree.glb"></a-asset-item>
             <a-asset-item id="butterfly" src="animated_butterfly.glb"></a-asset-item>
             <a-asset-item id="net" src="jellyfish_net_spongebob.glb"></a-asset-item>
+            <!-- Ο ήχος πόντου -->
+            <audio id="catch" src="ding-402325.mp3"></audio>
         </a-assets>
+
+        <!-- Entity για τον ήχο -->
+        <a-entity id="catch-sound"
+                  sound="src: #catch; autoplay: false; positional: false; volume: 1">
+        </a-entity>
 
         <a-plane color="#2a1c0e" height="1000" width="1000"
                  rotation="-90 0 0" metalness="0" shadow></a-plane>
@@ -92,6 +109,15 @@
             butterfly.setAttribute('flying', '');
             scene1.appendChild(butterfly);
         }
+
+        // Ξεκλείδωμα ήχου με πρώτο click για browser autoplay policy
+        window.addEventListener('click', function () {
+            var sound = document.getElementById('catch-sound');
+            if (sound && sound.components.sound) {
+                sound.components.sound.playSound();
+                sound.components.sound.stopSound();
+            }
+        }, { once: true });
     </script>
 </body>
 
