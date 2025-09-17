@@ -63,7 +63,8 @@
             <a-asset-item id="tree" src="low_poly_tree.glb"></a-asset-item>
             <a-asset-item id="butterfly" src="animated_butterfly.glb"></a-asset-item>
             <a-asset-item id="net" src="jellyfish_net_spongebob.glb"></a-asset-item>
-            <audio id="catch" src="catch.mp3"></audio>
+            <!-- Ο ήχος πόντου -->
+            <audio id="catch" src="ding-402325.mp3"></audio>
         </a-assets>
 
         <!-- Entity για ήχο πόντου -->
@@ -105,8 +106,16 @@
             butterfly.setAttribute('flying', '');
             scene1.appendChild(butterfly);
         }
+
+        // Ξεκλειδώνει το audio context με το πρώτο κλικ
+        window.addEventListener('click', function () {
+            var sound = document.getElementById('catch-sound');
+            if (sound && sound.components.sound) {
+                sound.components.sound.playSound();
+                sound.components.sound.stopSound();
+            }
+        }, { once: true });
     </script>
 </body>
 
 </html>
-
